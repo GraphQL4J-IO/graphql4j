@@ -1,2 +1,2 @@
 # graphql4j
-Wrap up library for graphql-java
+Wrap up library to make graphql-java better :)

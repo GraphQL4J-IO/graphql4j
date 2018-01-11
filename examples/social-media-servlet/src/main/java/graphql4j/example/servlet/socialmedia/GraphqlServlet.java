@@ -17,6 +17,12 @@ import java.util.stream.Collectors;
 public class GraphqlServlet extends HttpServlet {
 
     @Override
+    public void init() throws ServletException {
+        super.init();
+        Datasource.init();
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         String payload = req.getReader().lines().collect(Collectors.joining());
         ObjectMapper mapper = new ObjectMapper();

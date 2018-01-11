@@ -4,19 +4,19 @@ import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.GraphQLError;
-import graphql.Scalars;
+import graphql.schema.GraphQLArgument;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
 
 import java.util.List;
 
+import static graphql.Scalars.*;
 import static graphql.schema.GraphQLFieldDefinition.*;
 import static graphql.schema.GraphQLObjectType.*;
 
 public class GraphqlController {
 
     public ExecutionResult index(String query) {
-        System.out.println("::: " + query);
         GraphQLSchema schema = GraphQLSchema.newSchema()
                 .query(getQueryType())
                 .build();
@@ -39,7 +39,11 @@ public class GraphqlController {
                 .name("Query")
                 .field(newFieldDefinition()
                         .name("findPerson")
-                        .type(Scalars.GraphQLString)
+                        .type(GraphQLString)
+                        .argument(GraphQLArgument.newArgument()
+                                .name("id")
+                                .type(GraphQLString)
+                                .build())
                         .build())
                 .build();
     }

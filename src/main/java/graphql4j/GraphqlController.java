@@ -1,14 +1,12 @@
-package graphql4j.example.servlet.socialmedia.controller;
+package graphql4j;
 
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
-import graphql.GraphQLError;
 import graphql.schema.GraphQLArgument;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
-
-import java.util.List;
+import graphql4j.blueprint.GraphqlSchema;
 
 import static graphql.Scalars.*;
 import static graphql.schema.GraphQLFieldDefinition.*;
@@ -16,21 +14,25 @@ import static graphql.schema.GraphQLObjectType.*;
 
 public class GraphqlController {
 
+    private final GraphQL graphQL;
+
+    public GraphqlController(GraphqlSchema graphqlSchema) {
+        this.graphQL = GraphQL
+                .newGraphQL(GraphQLSchema.newSchema()
+                        .query(graphqlSchema.getQuery())
+                        .mutation(graphqlSchema.getMutation())
+                        .build())
+                .build();
+    }
+
     public ExecutionResult index(String query) {
-        GraphQLSchema schema = GraphQLSchema.newSchema()
-                .query(getQueryType())
-                .build();
-
-        GraphQL graphQL = GraphQL.newGraphQL(schema)
-                .build();
-
         ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(query)
                 .build();
 
         ExecutionResult executionResult = graphQL.execute(executionInput);
 
-        Object data = executionResult.getData();
-        List<GraphQLError> errors = executionResult.getErrors();
+        //Object data = executionResult.getData();
+        //List<GraphQLError> errors = executionResult.getErrors();
         return executionResult;
     }
 

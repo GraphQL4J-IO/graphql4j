@@ -2,7 +2,7 @@ package graphql4j.example.servlet.socialmedia;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionResult;
-import graphql4j.example.servlet.socialmedia.controller.GraphqlController;
+import graphql4j.GraphqlController;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,11 +23,11 @@ public class GraphqlServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String payload = req.getReader().lines().collect(Collectors.joining());
         ObjectMapper mapper = new ObjectMapper();
         Map jsonPayload = mapper.readValue(payload, Map.class);
-        ExecutionResult result = new GraphqlController().index((String)jsonPayload.get("query"));
+        ExecutionResult result = new GraphqlController(GraphqlBootstrap.init()).index((String)jsonPayload.get("query"));
         res.setContentType("application/json");
         res.getOutputStream().write(mapper.writeValueAsBytes(result));
     }

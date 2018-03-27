@@ -1,5 +1,5 @@
 group = 'graphql4j'
-version = '2018.1.3-SNAPSHOT'
+version = '2018.3.27-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'groovy'

@@ -40,6 +40,10 @@ public class GraphqlResult implements ExecutionResult {
         this.extensions = extensions;
     }
 
+    public static GraphqlResult from(ExecutionResult er) {
+      return new GraphqlResult(er.getData(), er.getErrors(), er.getExtensions());
+    }
+
     @Override
     public <T> T getData() {
         //noinspection unchecked

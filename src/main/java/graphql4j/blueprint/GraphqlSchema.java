@@ -9,29 +9,26 @@ import java.util.Set;
 
 public class GraphqlSchema {
 
-  private static final GraphqlSchema singleton = new GraphqlSchema();
-
   private final Set<GraphQLFieldDefinition> queryFieldSet;
   private final Set<GraphQLFieldDefinition> mutationFieldSet;
 
-  private GraphqlSchema() {
+  public GraphqlSchema() {
     this.queryFieldSet = new HashSet<>();
     this.mutationFieldSet = new HashSet<>();
   }
 
-  public GraphQLSchema build() {
-    GraphQLObjectType.Builder queryBuilder = GraphQLObjectType.newObject().name("Query");
-    for (GraphQLFieldDefinition queryFieldDef : queryFieldSet) {
-      queryBuilder.field(queryFieldDef);
-    }
-    GraphQLObjectType.Builder mutationBuilder = GraphQLObjectType.newObject().name("Mutation");
-    for (GraphQLFieldDefinition mutationFieldDef : mutationFieldSet) {
-      mutationBuilder.field(mutationFieldDef);
-    }
-    return GraphQLSchema.newSchema()
-      .query(queryBuilder.build())
-      .mutation(mutationBuilder.build())
-      .build();
+  public GraphqlSchema(GraphqlSchema schemaToMerge) {
+    this();
+    this.queryFieldSet.addAll(schemaToMerge.getQueryFieldSet());
+    this.mutationFieldSet.addAll(schemaToMerge.getMutationFieldSet());
+  }
+
+  public Set<GraphQLFieldDefinition> getQueryFieldSet() {
+    return queryFieldSet;
+  }
+
+  public Set<GraphQLFieldDefinition> getMutationFieldSet() {
+    return mutationFieldSet;
   }
 
   public void addQueryField(GraphQLFieldDefinition queryField) {
@@ -42,8 +39,29 @@ public class GraphqlSchema {
     mutationFieldSet.add(mutationField);
   }
 
-  public static GraphqlSchema instance() {
-    return singleton;
+  public GraphQLSchema build() {
+    GraphQLSchema.Builder schemaBuilder = GraphQLSchema.newSchema();
+    buildQuery(schemaBuilder);
+    buildMutation(schemaBuilder);
+    return schemaBuilder.build();
+  }
+
+  private void buildQuery(GraphQLSchema.Builder schemaBuilder) {
+    if (queryFieldSet.isEmpty()) return;
+    GraphQLObjectType.Builder queryBuilder = GraphQLObjectType.newObject().name("Query");
+    for (GraphQLFieldDefinition queryFieldDef : queryFieldSet) {
+      queryBuilder.field(queryFieldDef);
+    }
+    schemaBuilder.query(queryBuilder);
+  }
+
+  private void buildMutation(GraphQLSchema.Builder schemaBuilder) {
+    if (mutationFieldSet.isEmpty()) return;
+    GraphQLObjectType.Builder mutationBuilder = GraphQLObjectType.newObject().name("Mutation");
+    for (GraphQLFieldDefinition mutationFieldDef : mutationFieldSet) {
+      mutationBuilder.field(mutationFieldDef);
+    }
+    schemaBuilder.mutation(mutationBuilder);
   }
 
 }

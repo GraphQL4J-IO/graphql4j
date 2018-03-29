@@ -1,11 +1,11 @@
 package graphql4j;
 
 import graphql.Scalars;
-import graphql.schema.GraphQLType;
+import graphql.schema.GraphQLOutputType;
 
 public class GraphqlTypeResolver {
 
-  public static GraphQLType resolve(Class javaType) {
+  public static GraphQLOutputType resolveGraphQLOutputType(Class javaType) {
     if (String.class.equals(javaType)) {
       return Scalars.GraphQLString;
     }

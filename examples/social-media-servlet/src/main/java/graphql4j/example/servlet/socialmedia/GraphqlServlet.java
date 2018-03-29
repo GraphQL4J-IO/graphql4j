@@ -1,7 +1,7 @@
 package graphql4j.example.servlet.socialmedia;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import graphql.ExecutionResult;
+import graphql4j.GraphqlResult;
 import graphql4j.GraphqlServer;
 
 import javax.servlet.ServletException;
@@ -27,7 +27,8 @@ public class GraphqlServlet extends HttpServlet {
         String payload = req.getReader().lines().collect(Collectors.joining());
         ObjectMapper mapper = new ObjectMapper();
         Map jsonPayload = mapper.readValue(payload, Map.class);
-        ExecutionResult result = new GraphqlServer(GraphqlBootstrap.init()).execute((String)jsonPayload.get("query"));
+        GraphqlServer graphqlServer = new GraphqlServer(GraphqlBootstrap.init());
+        GraphqlResult result = graphqlServer.execute((String)jsonPayload.get("query"));
         res.setContentType("application/json");
         res.getOutputStream().write(mapper.writeValueAsBytes(result));
     }

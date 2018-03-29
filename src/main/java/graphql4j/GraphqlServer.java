@@ -12,34 +12,32 @@ import static graphql.schema.GraphQLObjectType.*;
 
 public class GraphqlServer {
 
-    private final GraphQL graphQL;
+  private final GraphQL graphQL;
 
-    public GraphqlServer(GraphqlSchema graphqlSchema) {
-        this.graphQL = GraphQL
-                .newGraphQL(GraphqlSchema.instance().build())
-                .build();
-    }
+  public GraphqlServer(GraphqlSchema graphqlSchema) {
+    this.graphQL = GraphQL.newGraphQL(graphqlSchema.build()).build();
+  }
 
-    public GraphqlResult execute(String query) {
-        ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(query)
-                .build();
+  public GraphqlResult execute(String query) {
+    ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(query)
+      .build();
 
-        return GraphqlResult.from(graphQL.execute(executionInput));
-    }
+    return GraphqlResult.from(graphQL.execute(executionInput));
+  }
 
 
-    public GraphQLObjectType getQueryType() {
-        return newObject()
-                .name("Query")
-                .field(newFieldDefinition()
-                        .name("findPerson")
-                        .type(GraphQLString)
-                        .argument(GraphQLArgument.newArgument()
-                                .name("id")
-                                .type(GraphQLString)
-                                .build())
-                        .build())
-                .build();
-    }
+  public GraphQLObjectType getQueryType() {
+    return newObject()
+      .name("Query")
+      .field(newFieldDefinition()
+        .name("findPerson")
+        .type(GraphQLString)
+        .argument(GraphQLArgument.newArgument()
+          .name("id")
+          .type(GraphQLString)
+          .build())
+        .build())
+      .build();
+  }
 
 }
